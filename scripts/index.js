@@ -5,53 +5,36 @@ system.afterEvents.scriptEventReceive.subscribe(ev => {
     const { id, message, sourceEntity } = ev;
 
     if (id === "m:s") {
-        switch (message.startsWith()) {
-            case "reload":
-                reload();
-                break;
+        if (message.startsWith("reload")) {
+            reload();
+        } else if (message.startsWith("stop")) {
+            stop();
+        } else if (message.startsWith("restart")) {
+            restart();
+        } else if (message.startsWith("backup")) {
+            backup();
+        } else if (message.startsWith("merge")) {
+            merge();
+        } else if (message.startsWith("transfer")) {
+            const [host, portString] = message.split(" ");
+            const port = parseFloat(portString);
 
-            case "stop":
-                stop();
-                break;
+            if (sourceEntity && sourceEntity instanceof Player) {
+                transfer(sourceEntity, host, port);
+            }
+        } else if (message.startsWith("kick")) {
+            const reason = message.split(" ")[1];
 
-            case "restart":
-                restart();
-                break;
+            if (sourceEntity && sourceEntity instanceof Player) {
+                kick(sourceEntity, reason);
+            }
+        } else if (message.startsWith("allowlist")) {
+            const [type, name, igLimitString] = message.split(" ");
+            const igLimit = igLimitString === "true";
 
-            case "backup":
-                backup();
-                break;
-
-            case "merge":
-                merge();
-                break;
-
-            case "transfer":
-                const host = message.split(" ")[0];
-                const port = parseFloat(message.split(" ")[1]);
-
-                if (sourceEntity && sourceEntity instanceof Player) {
-                    transfer(sourceEntity, host, port);
-                }
-                break;
-
-            case "kick":
-                const reason = message.split(" ")[0];
-
-                if (sourceEntity && sourceEntity instanceof Player) {
-                    kick(sourceEntity, reason);
-                }
-                break;
-
-            case "allowlist":
-                const type = message.split(" ")[0];
-                const name = message.split(" ")[1];
-                const igLimit = message.split(" ")[2] === "true" ? true : false;
-
-                if (sourceEntity && sourceEntity instanceof Player) {
-                    allowlist(type, name, igLimit);
-                }
-                break;
+            if (sourceEntity && sourceEntity instanceof Player) {
+                allowlist(type, name, igLimit);
+            }
         }
     }
 });
