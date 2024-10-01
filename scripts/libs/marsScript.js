@@ -55,7 +55,7 @@ export function transfer(player, host, port) {
     if (typeof host !== "string") return;
     if (typeof port !== "number") return;
 
-    send("transfer", { player, host, port });
+    send("transfer", { player: player.name, host, port });
 }
 
 /**
